@@ -29,7 +29,6 @@ COPY . .
 
 RUN yarn build
 
-
 # production stage
 FROM base AS production
 
@@ -40,14 +39,9 @@ ENV CONSOLE_API_URL=http://127.0.0.1:5001
 ENV APP_API_URL=http://127.0.0.1:5001
 ENV PORT=3000
 
-# set timezone
-ENV TZ=UTC
-RUN ln -s /usr/share/zoneinfo/${TZ} /etc/localtime \
-    && echo ${TZ} > /etc/timezone
-
 # global runtime packages
-RUN yarn global add pm2 \
-    && yarn cache clean
+#RUN yarn global add pm2 \
+RUN yarn cache clean
 
 WORKDIR /app/web
 COPY --from=builder /app/web/public ./public
@@ -55,7 +49,7 @@ COPY --from=builder /app/web/.next/standalone ./
 COPY --from=builder /app/web/.next/static ./.next/static
 
 
-COPY docker/pm2.json ./pm2.json
+#COPY docker/pm2.json ./pm2.json
 COPY docker/entrypoint.sh ./entrypoint.sh
 
 ARG COMMIT_SHA
